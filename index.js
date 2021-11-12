@@ -25,7 +25,7 @@ async function run(){
     const database=client.db("MotorBike");
     const  serviceCollection=database.collection('services');
     const reviewCollection=database.collection('reviews')
-
+    const orderCollection=database.collection('orders')
   //Post Api
 
   app.post('/products',async(req,res)=>{
@@ -70,27 +70,39 @@ async function run(){
 
     //get the single service
     
-    // app.get('/services/:id',async(req,res)=>{
-    //   const id=req.params.id;
-    //   const query={_id:objectId(id)}
-    //   const service=await serviceCollection.findOne(query)
-    //   res.json(service)
-    // })
+    app.get('/purchase/:id',async(req,res)=>{
+      const id=req.params.id;
+      const query={_id:objectId(id)}
+      const service=await serviceCollection.findOne(query)
+      res.json(service)
+    })
     
     
-    //Post api
+    //Post api for purchase
     
-    // app.post('/services',async(req,res)=>{
+    app.post('/orders',async(req,res)=>{
        
-    //     const service=req.body;
-    //     console.log('hit the post api',service)
+        const orders=req.body;
+        console.log('hit the post api',orders)
       
-    //      const result= await serviceCollection.insertOne(service)
-    //      console.log(result)
-    //      res.json(result)
+         const result= await orderCollection.insertOne(orders)
+         console.log(result)
+         res.json(result)
       
-    //    // res.send('post hitted')
-    // })
+       // res.send('post hitted')
+    })
+
+    //get the orders
+
+    app.get('/orders',async(req,res)=>{
+      const email=req.query.email
+      const query={email:email}
+  
+      const cursor=orderCollection.find(query)
+      const orders= await cursor.toArray();
+      res.send(orders)
+  })
+  
     
 //post the details
 
