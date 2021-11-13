@@ -26,6 +26,7 @@ async function run(){
     const  serviceCollection=database.collection('services');
     const reviewCollection=database.collection('reviews')
     const orderCollection=database.collection('orders')
+    const usersCollection=database.collection('users')
   //Post Api
 
   app.post('/products',async(req,res)=>{
@@ -94,29 +95,58 @@ async function run(){
 
     //get the orders
 
-    app.get('/orders',async(req,res)=>{
-      const email=req.query.email
-      const query={email:email}
-  
-      const cursor=orderCollection.find(query)
-      const orders= await cursor.toArray();
-      res.send(orders)
+    app.get('/orders/:id',async(req,res)=>{
+      const id=req.params.id;
+      const query={_id:objectId(id)}
+      const orders=await orderCollection.findOne(query)
+      console.log(orders)
+      res.json(orders)
   })
   
     
-//post the details
 
-// app.post('/orders',async(req,res)=>{
+  //users post 
+  app.post('/users',async(req,res)=>{
        
-//     const orders=req.body;
-//     console.log('hit the post api',orders)
+    const users=req.body;
+    console.log('hit the post api',users)
   
-//      const result= await  orderCollection.insertOne(orders)
-//      console.log(result)
-//      res.json(result)
+     const result= await usersCollection.insertOne(users)
+     console.log(result)
+     res.json(result)
   
-//    // res.send('post hitted')
-// })
+   // res.send('post hitted')
+})
+
+app.put('/users',async(req,res)=>{
+       
+  const users=req.body;
+  const filter={email:users.email}
+  const options={upsert:true}
+  const updateDoc={$set:users}
+
+   const result= await usersCollection.updateOne(filter,updateDoc,options)
+   console.log(result)
+   res.json(result)
+
+ // res.send('post hitted')
+})
+
+
+app.put('/users/admin',async(req,res)=>{
+       
+  const users=req.body;
+  const filter={email:users.email}
+  const options={upsert:true}
+  const updateDoc={$set:{role:'admin'}}
+
+   const result= await usersCollection.updateOne(filter,updateDoc,options)
+   console.log(result)
+   res.json(result)
+
+ // res.send('post hitted')
+})
+
 
 //delete
 
