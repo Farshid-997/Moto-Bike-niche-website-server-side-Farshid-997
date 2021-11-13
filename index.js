@@ -103,6 +103,19 @@ async function run(){
       res.json(orders)
   })
   
+
+  //get the user 
+  
+  app.get('/users/:email',async(req,res)=>{
+    const email=req.params.email;
+    const query={email:email}
+    const users=await usersCollection.findOne(query)
+   let isAdmin=false
+   if(users?.role==='admin'){
+isAdmin=true;
+   }
+    res.json({admin:isAdmin})
+})
     
 
   //users post 
@@ -148,19 +161,7 @@ app.put('/users/admin',async(req,res)=>{
 })
 
 
-//delete
 
-// app.delete('/orders/:id',async(req,res)=>{
-       
-//     const id=req.params.id;
-//       const query={_id:objectId(id)}
-  
-//      const result= await  orderCollection.deleteOne(query)
-//      console.log(result)
-//      res.json(result)
-  
-//    // res.send('post hitted')
-// })
 
 
     }
