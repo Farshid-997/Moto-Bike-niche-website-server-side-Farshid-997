@@ -33,7 +33,7 @@ async function run(){
     const product=req.body
     console.log("hit the post api",product)
 
-    const result=await serviceCollection.insertOne(service)
+    const result=await serviceCollection.insertOne(product)
     console.log(result)
     res.json(result)
  
